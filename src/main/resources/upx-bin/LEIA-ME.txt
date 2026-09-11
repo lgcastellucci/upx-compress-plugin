@@ -1,0 +1,15 @@
+Coloque aqui os binários oficiais do UPX baixados em:
+https://github.com/upx/upx/releases
+
+- upx.exe      -> binário Windows (de upx-X.Y.Z-win64.zip)
+- upx-linux    -> binário Linux (de upx-X.Y.Z-amd64_linux.tar.xz), renomeado para "upx-linux"
+
+Esses arquivos são binários e não podem ser criados por texto; baixe o .zip/.tar.xz
+da release, extraia o executável e copie para esta pasta com esses nomes exatos
+(são os mesmos nomes usados em UpxCompressBuilder.extractUpx()).
+
+Licença: o UPX é distribuído sob GPL-2.0-or-later com uma exceção especial que
+permite comprimir/distribuir executáveis de terceiros livremente. Ao redistribuir
+o próprio binário do UPX dentro do seu plugin, mantenha o aviso de licença do UPX
+(arquivo LICENSE/COPYING da release) em um arquivo NOTICE ou LICENSE-upx.txt na
+raiz do repositório, para deixar claro que o binário embutido é de terceiros.

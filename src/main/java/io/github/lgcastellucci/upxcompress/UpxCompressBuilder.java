@@ -32,6 +32,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -64,6 +66,8 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             "402162aad30af47e60dbd767fb2e64ca394ace9727ba1f40283641f1d1b91657";
     private static final String LINUX_AMD64_ENTRY = "upx-" + UPX_VERSION + "-amd64_linux/upx";
 
+    private static final Pattern WINDOWS_VAR_PATTERN = Pattern.compile("%([A-Za-z_][A-Za-z0-9_]*)%");
+
     private final String executable;
     private String options = "--best --lzma";
 
@@ -93,8 +97,10 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
                          @Nonnull TaskListener listener) throws InterruptedException, IOException {
 
         // Permite usar variáveis do Jenkins no nome do executável, ex: ${PROJETO}.exe
-        String resolvedExecutable = env.expand(executable);
-        String resolvedOptions = options == null ? "" : env.expand(options);
+        // e também a sintaxe %PROJETO% do Windows (não é expandida pelo Jenkins
+        // sozinho fora de um step de batch, então fazemos isso manualmente aqui).
+        String resolvedExecutable = expand(executable, env);
+        String resolvedOptions = options == null ? "" : expand(options, env);
 
         FilePath target = workspace.child(resolvedExecutable);
         if (!target.exists()) {
@@ -248,6 +254,27 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
                 return null;
             }
         });
+    }
+
+    /**
+     * Expande variáveis tanto na sintaxe do Jenkins ({@code ${VAR}} / {@code $VAR})
+     * quanto na sintaxe do Windows batch ({@code %VAR%}), já que esta última só é
+     * expandida automaticamente pelo cmd.exe dentro de um step de batch — não
+     * quando o valor só é lido como texto, como fazemos aqui.
+     */
+    private static String expand(String input, hudson.EnvVars env) {
+        if (input == null) {
+            return null;
+        }
+        String result = env.expand(input);
+        Matcher matcher = WINDOWS_VAR_PATTERN.matcher(result);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            String value = env.get(matcher.group(1));
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(value != null ? value : matcher.group()));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     @Symbol("upxCompress")

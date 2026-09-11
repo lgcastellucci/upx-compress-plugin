@@ -19,11 +19,6 @@
   <packaging>hpi</packaging>
 
   <name>UPX Compress Plugin</name>
-  <description>
-    Compacta o executável gerado no build (Delphi, .NET, etc.) usando o UPX,
-    sem depender de um caminho fixo no disco: o binário do UPX viaja embutido
-    dentro do próprio plugin.
-  </description>
   <url>https://github.com/lgcastellucci/upx-compress-plugin</url>
 
   <licenses>

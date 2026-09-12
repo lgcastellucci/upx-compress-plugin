@@ -5,6 +5,7 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.AbstractProject;
+import hudson.model.Item;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -13,11 +14,14 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import jenkins.MasterToSlaveFileCallable;
+import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.verb.POST;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -292,14 +296,26 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             return "Compactar executável com UPX";
         }
 
-        public FormValidation doCheckExecutable(@QueryParameter String value) {
+        @POST
+        public FormValidation doCheckExecutable(@AncestorInPath Item item, @QueryParameter String value) {
+            if (item != null) {
+                item.checkPermission(Item.CONFIGURE);
+            } else {
+                Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+            }
             if (Util.fixEmptyAndTrim(value) == null) {
                 return FormValidation.error("Informe o nome do executável, ex: projeto.exe");
             }
             return FormValidation.ok();
         }
 
-        public FormValidation doCheckOptions(@QueryParameter String value) {
+        @POST
+        public FormValidation doCheckOptions(@AncestorInPath Item item, @QueryParameter String value) {
+            if (item != null) {
+                item.checkPermission(Item.CONFIGURE);
+            } else {
+                Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+            }
             return FormValidation.ok();
         }
     }

@@ -2,11 +2,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
   <f:entry title="Executável" field="executable"
            description="Nome do arquivo gerado pelo build, ex: ${'$'}{PROJETO}.exe">
-    <f:textbox />
+    <f:textbox checkMethod="post" />
   </f:entry>
 
   <f:entry title="Opções" field="options"
            description="Argumentos passados para o upx.exe">
-    <f:textbox default="--best --lzma" />
+    <f:textbox default="--best --lzma" checkMethod="post" />
   </f:entry>
 </j:jelly>

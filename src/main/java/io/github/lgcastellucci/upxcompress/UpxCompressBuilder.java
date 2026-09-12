@@ -23,7 +23,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.verb.POST;
 
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -94,11 +94,11 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
     }
 
     @Override
-    public void perform(@Nonnull Run<?, ?> run,
-                         @Nonnull FilePath workspace,
-                         @Nonnull hudson.EnvVars env,
-                         @Nonnull Launcher launcher,
-                         @Nonnull TaskListener listener) throws InterruptedException, IOException {
+    public void perform(@NonNull Run<?, ?> run,
+                         @NonNull FilePath workspace,
+                         @NonNull hudson.EnvVars env,
+                         @NonNull Launcher launcher,
+                         @NonNull TaskListener listener) throws InterruptedException, IOException {
 
         // Permite usar variáveis do Jenkins no nome do executável, ex: ${PROJETO}.exe
         // e também a sintaxe %PROJETO% do Windows (não é expandida pelo Jenkins
@@ -290,7 +290,7 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             return true;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Compactar executável com UPX";

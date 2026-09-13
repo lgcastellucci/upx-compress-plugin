@@ -1,64 +1,42 @@
-# UPX Compress Plugin (Jenkins)
+# UPX Compress Plugin
 
-Build step do Jenkins que compacta o executável gerado no build (Delphi 7,
-Delphi/RAD Studio, .NET, etc.) usando o [UPX](https://upx.github.io/), sem
-depender de um caminho fixo no disco do agente: na primeira execução em cada
-workspace, o plugin baixa o binário oficial do UPX diretamente das
-[releases do GitHub (upx/upx)](https://github.com/upx/upx/releases),
-confere o hash SHA-256 contra um valor fixado no código-fonte e só então o
-executa. Nada de UPX é versionado dentro deste repositório.
+A Jenkins build step that compresses the executable produced by a build
+(Delphi 7, Delphi/RAD Studio, .NET, etc.) using [UPX](https://upx.github.io/).
 
-## Uso
+UPX itself is not bundled with the plugin: it is downloaded on demand from
+the official [upx/upx GitHub releases](https://github.com/upx/upx/releases)
+by a configured **UPX installation** (see below), matching the OS/architecture
+of the node the build runs on, and its SHA-256 is cross-checked against the
+digest published by GitHub's release API when available.
 
-Em um job Freestyle: **Adicionar etapa de build → Compactar executável com UPX**.
+## Configuring a UPX installation
 
-| Campo         | Descrição                                              | Padrão            |
-|---------------|---------------------------------------------------------|--------------------|
-| Executável    | Caminho relativo ao workspace, ex: `Projeto.exe`         | (obrigatório)      |
-| Opções        | Argumentos de linha de comando do UPX                    | `--best --lzma`    |
+Under **Manage Jenkins > Tools**, add a **UPX installation** and pick
+"Download from upx/upx GitHub releases" as its installer, entering the UPX
+version you want (e.g. `5.2.1`). You can configure more than one version if
+different jobs need different ones.
 
-Em Pipeline (declarativo/scripted):
+## Usage
+
+In a Freestyle job: **Add build step > Compress executable with UPX**, then
+pick the UPX installation, the executable name, and (optionally) the
+options.
+
+| Field       | Description                                                    | Default          |
+|-------------|------------------------------------------------------------------|------------------|
+| UPX installation | Which configured UPX version to use                        | (required)       |
+| Executable  | Path relative to the workspace, e.g. `Project.exe`               | (required)       |
+| Options     | Command-line arguments passed to UPX                              | `--best --lzma`  |
+
+In a Pipeline:
 
 ```groovy
-step([$class: 'UpxCompressBuilder', executable: "${PROJETO}.exe", options: '--best --lzma'])
-
-// ou, com o Symbol registrado:
-upxCompress executable: "${PROJETO}.exe", options: '--best --lzma'
+upxCompress upxName: 'upx-5.2.1', executable: "${PROJECT}.exe", options: '--best --lzma'
 ```
 
-## Build local
+## License
 
-Pré-requisitos: JDK 11+, Maven 3.8+.
-
-```bash
-mvn hpi:run      # sobe um Jenkins local em http://localhost:8080/jenkins para testar
-mvn package      # gera target/upx-compress.hpi
-```
-
-## Instalação
-
-1. Baixe o `.hpi` gerado (ou de uma release deste repositório).
-2. No Jenkins: **Gerenciar Jenkins → Plugins → Advanced settings → Deploy Plugin**
-   e faça upload do arquivo `.hpi`.
-3. Reinicie o Jenkins se solicitado.
-
-## Atualizando a versão do UPX
-
-A versão, as URLs de download e os hashes SHA-256 esperados ficam em
-constantes no topo de `UpxCompressBuilder.java`
-(`UPX_VERSION`, `WIN64_SHA256`, `LINUX_AMD64_SHA256`). Para adotar uma nova
-versão do UPX:
-
-1. Baixe os artefatos `upx-X.Y.Z-win64.zip` e `upx-X.Y.Z-amd64_linux.tar.xz`
-   em https://github.com/upx/upx/releases/tag/vX.Y.Z.
-2. Calcule o SHA-256 de cada um (`sha256sum arquivo` no Linux ou
-   `certutil -hashfile arquivo SHA256` no Windows) e confira contra o hash
-   publicado na página da release.
-3. Atualize as constantes no código com a nova versão e os novos hashes.
-
-## Licença
-
-Código deste plugin: MIT (veja `LICENSE`).
-O UPX em si (baixado em tempo de execução, não redistribuído por este
-repositório) é licenciado pelo próprio projeto sob GPL-2.0-or-later com
-exceção para executáveis comprimidos — veja https://github.com/upx/upx/blob/master/LICENSE.
+Plugin code: MIT (see `LICENSE`).
+UPX itself (downloaded at build time, not redistributed by this repository)
+is licensed by the upx/upx project under GPL-2.0-or-later with an exception
+for compressed executables — see https://github.com/upx/upx/blob/master/LICENSE.

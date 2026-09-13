@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <div>
-  Compacta o executável gerado no build (Delphi 7, Delphi/RAD Studio, .NET, etc.)
-  usando o <a href="https://upx.github.io/">UPX</a>, sem depender de um caminho
-  fixo no disco: o binário do UPX viaja embutido dentro do próprio plugin e é
-  extraído para o workspace do build em tempo de execução.
+  Compresses the executable produced by the build (Delphi 7, Delphi/RAD
+  Studio, .NET, etc.) using <a href="https://upx.github.io/">UPX</a>. UPX is
+  downloaded on demand from the official releases and verified by SHA-256,
+  matching the OS/architecture of the node the build runs on.
 </div>

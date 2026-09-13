@@ -19,7 +19,14 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+<<<<<<< HEAD
 import javax.annotation.Nonnull;
+=======
+import edu.umd.cs.findbugs.annotations.NonNull;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+>>>>>>> eb1a20f1e4e6cf38af595fc10eac9574db4f9d3c
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,11 +78,19 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
     }
 
     @Override
+<<<<<<< HEAD
     public void perform(@Nonnull Run<?, ?> run,
                          @Nonnull FilePath workspace,
                          @Nonnull EnvVars env,
                          @Nonnull Launcher launcher,
                          @Nonnull TaskListener listener) throws InterruptedException, IOException {
+=======
+    public void perform(@NonNull Run<?, ?> run,
+                         @NonNull FilePath workspace,
+                         @NonNull hudson.EnvVars env,
+                         @NonNull Launcher launcher,
+                         @NonNull TaskListener listener) throws InterruptedException, IOException {
+>>>>>>> eb1a20f1e4e6cf38af595fc10eac9574db4f9d3c
 
         // Supports both Jenkins-style (${VAR} / $VAR) and Windows batch-style
         // (%VAR%) variables, since the latter is only expanded automatically
@@ -189,7 +204,7 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             return true;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Compress executable with UPX";

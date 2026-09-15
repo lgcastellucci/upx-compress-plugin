@@ -1,8 +1,0 @@
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-  <f:section title="UPX">
-    <f:entry title="UPX installations">
-      <f:repeatableProperty field="installations" />
-    </f:entry>
-  </f:section>
-</j:jelly>

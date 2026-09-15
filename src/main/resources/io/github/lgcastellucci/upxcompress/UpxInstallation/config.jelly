@@ -7,9 +7,4 @@
            description="Leave empty when using the installer below; it will be filled in automatically.">
     <f:textbox />
   </f:entry>
-  <f:block>
-    <table width="100%">
-      <f:descriptorList field="properties" descriptors="${descriptor.propertyDescriptors}" />
-    </table>
-  </f:block>
 </j:jelly>

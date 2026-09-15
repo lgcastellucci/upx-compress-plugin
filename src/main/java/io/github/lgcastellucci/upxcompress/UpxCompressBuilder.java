@@ -20,6 +20,7 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.verb.POST;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -196,7 +197,8 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             return "Compress executable with UPX";
         }
 
-        public ListBoxModel doFillUpxNameItems(@AncestorInPath Item item) {
+        @POST
+		public ListBoxModel doFillUpxNameItems(@AncestorInPath Item item) {
             if (item != null) {
                 item.checkPermission(Item.CONFIGURE);
             } else {

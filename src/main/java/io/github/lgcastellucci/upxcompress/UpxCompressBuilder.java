@@ -6,6 +6,7 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
 import hudson.model.Computer;
+import hudson.model.Item;
 import hudson.model.Node;
 import hudson.model.Result;
 import hudson.model.Run;
@@ -16,6 +17,7 @@ import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -194,7 +196,12 @@ public class UpxCompressBuilder extends Builder implements SimpleBuildStep {
             return "Compress executable with UPX";
         }
 
-        public ListBoxModel doFillUpxNameItems() {
+        public ListBoxModel doFillUpxNameItems(@AncestorInPath Item item) {
+            if (item != null) {
+                item.checkPermission(Item.CONFIGURE);
+            } else {
+                Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+            }
             ListBoxModel items = new ListBoxModel();
             for (UpxInstallation i : allInstallations()) {
                 items.add(i.getName());
